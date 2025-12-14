@@ -63,11 +63,40 @@ const challenges = [
   {title: "Reverse Metadata Part 2", file: "CTF/PatriotCTF2025/Misc/ReverseMetaData2", flag: "PCTF{hidden_****}", type: "misc"}
 ];
 
+// === My CTFs Data ===
+const myCTFs = [
+  {
+    name: "PatriotCTF 2025",
+    solves: "7+ solves",
+    status: "Ended",
+    link: "CTF/PatriotCTF2025/patriotctf2025"
+  },
+   {
+     name: "NiteCTF 2025",
+     solves: "1 solves",
+     status: "Ended",
+     link: "CTF/Nite2025/GraphGrief.html"
+   }
+  ]
+
+
+// === Populate My CTFs Modal ===
+function populateMyCTFs() {
+  const ctfGrid = document.getElementById("ctfGrid");
+  ctfGrid.innerHTML = myCTFs.map(ctf => `
+    <div class="ctf-card" onclick="location.href='${ctf.link}'">
+      <h3>${ctf.name}</h3>
+      <p>${ctf.solves}</p>
+      <p class="status">${ctf.status}</p>
+    </div>
+  `).join('');
+}
+
+// === Category Badges ===
 function updateCategoryStats() {
   const solved = { web: 0, misc: 0, crypto: 0, pwn: 0, forensics: 0 };
   challenges.forEach(c => { if (solved.hasOwnProperty(c.type)) solved[c.type]++; });
 
-  // Only update category badges now
   const container = document.getElementById('category-badges');
   container.innerHTML = '';
   const cats = [
@@ -89,49 +118,48 @@ function updateCategoryStats() {
   });
 }
 
+// === Recent Solves ===
 function populateRecentSolves() {
   const list = document.getElementById('recentSolvesList');
   list.innerHTML = '';
-
-  // Take the last 4 challenges (most recent), then reverse so newest is on top
-  const recentFour = challenges.reverse().slice(-4).reverse();
-
-  recentFour.forEach(c => {
-    const li = document.createElement('li');
-    li.innerHTML = `<span class="tag tag-${c.type}">${c.title}</span>`;
-    li.style.cursor = 'pointer';
-    li.onclick = () => location.href = c.file;
-    list.appendChild(li);
-  });
+  challenges
+    .reverse()
+    .slice(-4)
+    .reverse()
+    .forEach(c => {
+      const li = document.createElement('li');
+      li.textContent = c.title;
+      li.onclick = () => location.href = c.file;
+      list.appendChild(li);
+    });
 }
 
-function renderChallenges(filter = "all") {
-  const container = document.getElementById("challengeCards");
-  container.innerHTML = "";
-  const toShow = filter === "all" ? challenges : challenges.filter(c => c.type === filter);
-  if (toShow.length === 0) {
-    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 60px;">No challenges yet in this category.</p>';
-  }
-  toShow.forEach(c => {
-    const card = document.createElement("div");
-    card.className = "card reveal";
-    card.innerHTML = `
-      <div class="category-tag tag-${c.type}">${c.type.toUpperCase()}</div>
-      <h3>${c.title}</h3>
-      <p class="flag">Flag: <code>${c.flag}</code></p>
-      <span style="opacity:0.7">Click for writeup</span>`;
-    card.onclick = () => location.href = c.file;
-    container.appendChild(card);
-  });
+// === Render Challenge Cards ===
+function renderChallenges(filter = 'all') {
+  const container = document.getElementById('challengeCards');
+  container.innerHTML = '';
+  challenges
+    .filter(c => filter === 'all' || c.type === filter)
+    .forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'card reveal';
+      card.innerHTML = `
+        <div class="category-tag tag-${c.type}">${c.type.toUpperCase()}</div>
+        <h3>${c.title}</h3>
+        <p class="flag">Flag: <code>${c.flag}</code></p>
+        <span style="opacity:0.7">Click for writeup</span>`;
+      card.onclick = () => location.href = c.file;
+      container.appendChild(card);
+    });
 
-  // ADD THIS BLOCK HERE (observe all new .reveal elements, including the freshly added cards)
-  const reveals = document.querySelectorAll('.reveal:not(.observed)'); // optional: add a marker class to avoid double-observing
-  reveals.forEach(el => {
+  // Re-observe new reveal elements
+  document.querySelectorAll('.reveal:not(.observed)').forEach(el => {
     observer.observe(el);
-    el.classList.add('observed'); // optional marker
+    el.classList.add('observed');
   });
 }
 
+// Tabs
 document.querySelectorAll('#challengeTabs .tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('#challengeTabs .tab').forEach(t => t.classList.remove('active'));
@@ -140,18 +168,25 @@ document.querySelectorAll('#challengeTabs .tab').forEach(tab => {
   });
 });
 
-document.getElementById("ctfGrid").innerHTML = '<div class="ctf-card" onclick="location.href=\'CTF/PatriotCTF2025/patriotctf2025\'"><h3>PatriotCTF 2025</h3><p>7+ solves</p><p style="color:#8b949e;font-weight:bold">Ended</p></div>';
+// Modal controls
+document.getElementById('ctfToggle').addEventListener('click', () => {
+  document.getElementById('ctfModal').classList.add('open');
+});
+document.querySelector('.close-modal').addEventListener('click', () => {
+  document.getElementById('ctfModal').classList.remove('open');
+});
+document.getElementById('ctfModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) document.getElementById('ctfModal').classList.remove('open');
+});
 
-document.getElementById('ctfToggle').addEventListener('click', () => document.getElementById('ctfModal').classList.add('open'));
-document.querySelector('.close-modal').addEventListener('click', () => document.getElementById('ctfModal').classList.remove('open'));
-document.getElementById('ctfModal').addEventListener('click', e => { if (e.target === e.currentTarget) document.getElementById('ctfModal').classList.remove('open'); });
-
+// Theme toggle
 document.getElementById('themeToggle').addEventListener('click', () => {
   document.documentElement.classList.toggle('light');
   localStorage.theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
 });
 if (localStorage.theme === 'light') document.documentElement.classList.add('light');
 
+// Visitor counter
 async function updateVisitorCount() {
   const el = document.getElementById('visitorCount');
   try {
@@ -160,7 +195,6 @@ async function updateVisitorCount() {
     const data = await res.json();
     el.textContent = data.value.toLocaleString();
   } catch (err) {
-    // Fallback to localStorage
     let count = parseInt(localStorage.getItem('local-visits') || '0');
     count += 1;
     localStorage.setItem('local-visits', count);
@@ -168,6 +202,7 @@ async function updateVisitorCount() {
   }
 }
 
+// Search bar
 document.getElementById('searchBar').addEventListener('input', e => {
   const term = e.target.value.toLowerCase();
   document.querySelectorAll('.card').forEach(card => {
@@ -175,6 +210,7 @@ document.getElementById('searchBar').addEventListener('input', e => {
   });
 });
 
+// Live clock
 function updateClock() {
   const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
   document.getElementById('liveClock').textContent = time;
@@ -182,10 +218,11 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// Run everything on load
+// On load
 window.addEventListener('load', () => {
   renderChallenges();
-  updateCategoryStats();        // This populates category badges
-  populateRecentSolves();       // This populates recent solves list
+  updateCategoryStats();
+  populateRecentSolves();
+  populateMyCTFs();     
   updateVisitorCount();
 });
