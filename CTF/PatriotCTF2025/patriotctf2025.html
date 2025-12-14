@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PatriotCTF 2025 • syndro</title>
+
+  <!-- THEME PERSISTENCE -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) {
+        document.documentElement.classList.add('light');
+      }
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --text: #f0f6fc;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --border: #30363d;
+    }
+    .light {
+      --bg: #ffffff;
+      --card: #f6f8fa;
+      --text: #24292f;
+      --accent: #1f6feb;
+      --border: #d0d7de;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* MATRIX RAIN */
+    canvas#matrix {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      opacity: 0.15;
+    }
+
+    /* SCANLINES */
+    #scanline-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,180,0.03) 2px, rgba(0,255,180,0.03) 4px);
+      animation: scanline 10s linear infinite;
+      z-index: -1;
+    }
+    @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+
+    /* BACK BUTTON */
+    .back-btn {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      z-index: 9999;
+      background: var(--accent);
+      color: #000;
+      padding: 16px 44px;
+      border-radius: 60px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      text-decoration: none;
+      box-shadow: 0 0 30px rgba(88,166,255,0.6);
+      transition: all 0.4s ease;
+      backdrop-filter: blur(12px);
+      border: 2px solid transparent;
+    }
+    .back-btn:hover {
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 0 50px rgba(88,166,255,0.9);
+    }
+    .light .back-btn { color: white; }
+
+    /* THEME BUTTON — SAME AS MAIN SITE */
+    .theme-toggle {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 9999;
+      background: var(--card);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(88,166,255,0.5);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: #000;
+      transform: scale(1.08);
+      box-shadow: 0 0 40px rgba(88,166,255,0.8);
+    }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      padding: 180px 20px 100px;
+    }
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 7rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #58a6ff, #8b5cf6, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 6px;
+      text-shadow: 0 0 40px rgba(88,166,255,0.5);
+    }
+    .light .header h1 {
+      background: linear-gradient(90deg, #1f6feb, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header p {
+      font-size: 1.6rem;
+      margin-top: 20px;
+      opacity: 0.85;
+      font-weight: 300;
+    }
+
+    /* GRID */
+    .grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 34px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--accent), #8b5cf6, #f472b6);
+      border-radius: 20px 20px 0 0;
+    }
+    .card:hover {
+      transform: translateY(-18px);
+      border-color: var(--accent);
+      box-shadow: 0 25px 60px rgba(88,166,255,0.5);
+    }
+
+    .tag {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .tag.misc       { background: #3fb950; color: #000; }
+    .tag.web        { background: #ff0000; color: #fff; }
+    .tag.pwn        { background: #f85149; color: #fff; }
+    .tag.crypto     { background: #ffa657; color: #000; }
+    .tag.forensics  { background: #9c72ff; color: #fff; }
+    .tag.rev        { background: #ff79c6; color: #000; }
+
+    .card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.7rem;
+      color: var(--accent);
+      margin: 8px 0 16px;
+    }
+    .card .flag {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--green);
+      padding: 14px 0;
+      border-top: 1px dashed rgba(88,166,255,0.3);
+      border-bottom: 1px dashed rgba(88,166,255,0.3);
+      margin: 16px 0;
+    }
+    .card small {
+      opacity: 0.7;
+      font-size: 0.95rem;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 4.5rem; }
+      .header { padding: 140px 20px 80px; }
+      .back-btn, .theme-toggle {
+        position: static;
+        display: block;
+        margin: 20px auto;
+        width: fit-content;
+      }
+      .theme-toggle { margin-top: 10px; }
+      .grid { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MATRIX BACKGROUND -->
+  <canvas id="matrix"></canvas>
+  <div id="scanline-overlay"></div>
+
+  <!-- BACK BUTTON -->
+  <a href="https://syndro-1.github.io/page/" class="back-btn">Back to Portfolio</a>
+
+  <!-- THEME TOGGLE -->
+  <div class="theme-toggle" id="themeToggle">Theme</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>PATRIOTCTF 2025</h1>
+    <p>Solved Challenges • Writeups by syndro</p>
+  </div>
+
+  <!-- CHALLENGES GRID -->
+  <div class="grid" id="grid"></div>
+
+  <script>
+    // MATRIX RAIN
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+    const fontSize = 14;
+    let columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function draw() {
+      ctx.fillStyle = 'rgba(13,17,23,0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0f0';
+      ctx.font = `${fontSize}px monospace`;
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 33);
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = canvas.width / fontSize;
+    });
+
+    // CHALLENGES
+    const challenges = [
+      { title: "Reverse Metadata Part 1", file: "Misc/ReverseMetaData1", flag: "MASONCC{images_****}", type: "misc" },
+      { title: "Reverse Metadata Part 2", file: "Misc/ReverseMetaData2", flag: "PCTF{hidden_****}", type: "misc" },
+      { title: "Connection Tester", file: "Web/ConnectionTester", flag: "PCTF{C0nnection_****}", type: "web" },
+      { title: "Feedback Fallout", file: "Web/FeedbackFallout", flag: "PCTF{SQLI_****}", type: "web" },
+      { title: "SecureAuth", file: "Web/SecureAuth", flag: "PCTF{cant_****}", type: "web" },
+      { title: "TrustFall", file: "Web/TrustFall", flag: "PCTF{auth_****}", type: "web" },
+      { title: "TrustVault", file: "Web/TrustVault", flag: "FLAG{py7h0n_****}", type: "web" },
+    ];
+
+    const grid = document.getElementById("grid");
+    challenges.forEach(c => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="tag ${c.type}">${c.type.toUpperCase()}</div>
+        <h3>${c.title}</h3>
+        <div class="flag">${c.flag}</div>
+        <small>Click to read writeup</small>
+      `;
+      card.onclick = () => location.href = c.file;
+      grid.appendChild(card);
+    });
+
+    // THEME TOGGLE
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.documentElement.classList.toggle('light');
+      localStorage.theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+    });
+  </script>
+</body>
+</html>

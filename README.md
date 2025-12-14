@@ -1,2 +1,3 @@
-# page
-My page with writeups &amp; info
+### Check me out here
+
+<a href="https://syndro-1.github.io/syndro/" target="_blank"> Site

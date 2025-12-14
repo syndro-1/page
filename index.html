@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>syndro | CTF Writeups</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <canvas id="particles"></canvas>
+
+  <div id="liveClock"></div>
+  <div class="scroll-progress"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-content">
+
+    <!-- Category Badges - Now at the very top -->
+    <div class="category-badges" id="category-badges"></div>
+
+    <!-- Quick Links -->
+    <div class="quick-links">
+      <a href="https://github.com/syndro-1" target="_blank">GitHub</a>
+      <a href="https://x.com/Syndro_1" target="_blank">X / Twitter</a>
+      <a href="https://discordapp.com/users/313717103150759950" target="_blank">Discord</a>
+      <a href="https://medium.com/@syndro" target="_blank">Medium</a>
+      <a href="https://www.linkedin.com/in/ibrahim-mahmoud-15905a340/" target="_blank">Linked-in</a>
+    </div>
+
+    <!-- Recent Solves -->
+    <div class="recent-solves">
+      <h3>Recent Solves</h3>
+      <ul id="recentSolvesList"></ul>
+    </div>
+
+    <!-- Visitor Counter -->
+    <div class="visitor-counter">
+      <span id="visitorCount">0</span> visitors
+    </div>
+  </div>
+</aside>
+
+  <main class="main-content">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="sun">☀</span>
+      <span class="moon">☾</span>
+    </button>
+    <button class="ctf-toggle" id="ctfToggle">My CTFs</button>
+
+    <header class="hero reveal">
+      <h1 class="hero-title">Syndro</h1>
+      <div class="bio-terminal">
+        <p>$ whoami<br><span>Syndro</span></p>
+        <p>$ cat bio.txt<br><span class="typing">CTF player @0xL4ugh • Web lover?! • Student at AOU</span></p>
+      </div>
+    </header>
+
+    <section class="writeups reveal">
+      <div class="section-header">
+        <h2>Writeups</h2>
+        <input type="text" id="searchBar" placeholder="Search titles or flags..." autocomplete="off">
+      </div>
+
+      <div class="tabs" id="challengeTabs">
+        <button class="tab active" data-cat="all">All</button>
+        <button class="tab" data-cat="web">Web</button>
+        <button class="tab" data-cat="misc">Misc</button>
+        <button class="tab" data-cat="crypto">Crypto</button>
+        <button class="tab" data-cat="pwn">Pwn</button>
+        <button class="tab" data-cat="forensics">Forensics</button>
+      </div>
+
+      <div class="cards-grid" id="challengeCards"></div>
+    </section>
+    <br>
+    <footer>syndro © 2025</footer>
+  </main>
+
+  <div class="modal" id="ctfModal">
+    <div class="modal-content">
+      <button class="close-modal" aria-label="Close">×</button>
+      <h2>My CTFs</h2>
+      <div class="ctf-grid" id="ctfGrid"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
