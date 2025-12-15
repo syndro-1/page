@@ -106,6 +106,7 @@
       border-radius: 50px;
       font-weight: bold;
       text-decoration: none;
+      
       box-shadow: 0 12px 40px rgba(88,166,255,0.6);
       transition: all 0.4s ease;
       z-index: 9999;
@@ -189,12 +190,12 @@
     <div class="meta">PatriotCTF 2025 • <span>Web</span> • syndro</div>
     <h2>0. The challenge description</h2>
     <p>There is not much really.</p>
-    <img src="https://github.com/user-attachments/assets/2eb922bd-6e5f-4032-95b6-0d94a1cccead" alt="Challenge banner">
+    <img src="Pic/TrustFall/1.png" alt="Challenge banner">
 
     <h2>1. The login page</h2>
     
     <p>From the get-go, we have zero info — just username & password placeholders.</p>
-    <img src="https://github.com/user-attachments/assets/874c593c-3c6c-4520-b818-e066f94e3c9a" alt="Login screen">
+    <img src="Pic/TrustFall/2.png" alt="Login screen">
 
     <p>Tried classic SQLi to log in as the first user (usually admin) → didn't work.<br>
     Inspected source, Network tab → both are useless.</p>
@@ -202,7 +203,7 @@
     <h2>2. The dashboard</h2>
     
     <p>So I just logged in with the placeholder values.</p>
-    <img src="https://github.com/user-attachments/assets/d6bc4b7c-55ad-4fcf-857c-b396d0555631" alt="Main dashboard">
+    <img src="Pic/TrustFall/3.png" alt="Main dashboard">
 
     <p>Welcome page. Nothing interactive except product and an “Admin Console” button in the bottom right — obviously our target.<br>
     Clicking it → 403 Forbidden.</p>
@@ -210,7 +211,7 @@
     <p>Noticed a signed session cookie. Modifying it is impossible without the secret, so I just <strong>deleted the cookie entirely</strong> → And Admin Console is accessible!</p>
 
     <p>…but it’s there just for the UI: </p>
-    <img src="https://github.com/user-attachments/assets/1dbfc75d-ecdc-4a4c-bf5e-20b6bd5a65b2" alt="Dummy admin source">
+    <img src="Pic/TrustFall/4.png" alt="Dummy admin source">
 
     <p>→ Pure UX garbage.</p>
 
@@ -218,12 +219,12 @@
 
     <h2>3. Checking the APIs/Assets</h2>
     <p>Network tab shows static files being loaded like:</p>
-    <img src="https://github.com/user-attachments/assets/5741c3ba-b057-4f54-8b5b-db8715328d67" alt="Assets from IP/assets/ITEM">
+    <img src="Pic/TrustFall/5.png" alt="Assets from IP/assets/ITEM">
 
     <p>→ We can directly access <code>/assets/anything</code> and it works. Tried ffuf on <code>/assets/</code> → no hidden dirs.</p>
 
     <p>Then I looked at the API call for products:</p>
-    <img src="https://github.com/user-attachments/assets/37770824-b42a-4c6e-9697-7c6357170349" alt="Products API call">
+    <img src="Pic/TrustFall/6.png" alt="Products API call">
 
     <p>Same pattern — maybe the API is also exposed and fuzzable?</p>
 
@@ -236,21 +237,21 @@
     <p>So, We need to fuzz an Endpoint, We can do that through ZAP easily.</p>
     <p>We select "proudcts" → Add → Strings → Paste our payload. </p>
     
-    <img src="https://github.com/user-attachments/assets/883354b4-50c3-4cf7-9413-749d0f1e84c8" alt="ZAP fuzz setup">
+    <img src="Pic/TrustFall/7.png" alt="ZAP fuzz setup">
 
     <p>Any page other than <code>the product page</code>we get redirected to the login. Could get annoying pretty quickly, So lets make a filter for it.</p>
     <p>We go to Message Processors → Add → Type: Tag Creator → Regex: Found → Tag: Bad</p>
-    <img src="https://github.com/user-attachments/assets/2d60e86f-70e2-44e7-91b0-f60dc2857802" alt="Filter out /login redirects">
+    <img src="Pic/TrustFall/8.png" alt="Filter out /login redirects">
 
     <p>And we find our endpoint!</p>
-    <img src="https://github.com/user-attachments/assets/f22b6ce7-b3d4-4250-8622-de9d9d02cb24" alt="Found /users endpoint">
+    <img src="Pic/TrustFall/9.png" alt="Found /users endpoint">
 
     <h2>5. THE FLAG</h2>
     <p><code>/users</code> exists! Trying <code>/users/1</code>, <code>/users/2</code> → normal users.<br>
     But <code>/users/0</code> Is usually the root/admin user So, We try it and there it is !</p>
 
-    <img src="https://github.com/user-attachments/assets/87e2c8d7-df01-4af0-b9ef-254f67cd07bd" alt="Invalid ID message">
-    <img src="https://github.com/user-attachments/assets/74aed047-fe8e-441e-9eb2-36eb8e71e0e3" alt="Flag at user 0">
+    <img src="Pic/TrustFall/10.png" alt="Invalid ID message">
+    <img src="Pic/TrustFall/11.png" alt="Flag at user 0">
 
     <div class="flag">
       PCTF{auth_****}
