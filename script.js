@@ -98,15 +98,15 @@ reveals.forEach(el => observer.observe(el));
 
 // Data
 const challenges = [
-  { title: "Graph grief", file: "CTF/Nite2025/GraphGrief/index.html", flag: "nite{Th3_Qu4ntum_****}", type: "web" },
-  { title: "Database Reincursion", file: "CTF/Nite2025/DatabaseReincursion/index.html", flag: "nite{neVeR_9Onn4_****}", type: "web" },
-  { title: "Connection Tester", file: "CTF/PatriotCTF2025/Web/ConnectionTester/index.html", flag: "PCTF{C0nnection_****}", type: "web" },
-  { title: "Feedback Fallout", file: "CTF/PatriotCTF2025/Web/FeedbackFallout/index.html", flag: "PCTF{SQLI_****}", type: "web" },
-  { title: "Secure Auth", file: "CTF/PatriotCTF2025/Web/SecureAuth/index.html", flag: "PCTF{cant_****}", type: "web" },
-  { title: "Trust Fall", file: "CTF/PatriotCTF2025/Web/TrustFall/index.html", flag: "PCTF{auth_****}", type: "web" },
-  { title: "Trust Vault", file: "CTF/PatriotCTF2025/Web/TrustVault/index.html", flag: "FLAG{py7h0n_****}", type: "web" },
-  { title: "Reverse Metadata Part 1", file: "CTF/PatriotCTF2025/Misc/ReverseMetaData1/index.html", flag: "MASONCC{images_****}", type: "misc" },
-  { title: "Reverse Metadata Part 2", file: "CTF/PatriotCTF2025/Misc/ReverseMetaData2/index.html", flag: "PCTF{hidden_****}", type: "misc" },
+  { title: "Graph grief", file: "CTF/Nite2025/GraphGrief", flag: "nite{Th3_Qu4ntum_****}", type: "web" },
+  { title: "Database Reincursion", file: "CTF/Nite2025/DatabaseReincursion", flag: "nite{neVeR_9Onn4_****}", type: "web" },
+  { title: "Connection Tester", file: "CTF/PatriotCTF2025/Web/ConnectionTester", flag: "PCTF{C0nnection_****}", type: "web" },
+  { title: "Feedback Fallout", file: "CTF/PatriotCTF2025/Web/FeedbackFallout", flag: "PCTF{SQLI_****}", type: "web" },
+  { title: "Secure Auth", file: "CTF/PatriotCTF2025/Web/SecureAuth", flag: "PCTF{cant_****}", type: "web" },
+  { title: "Trust Fall", file: "CTF/PatriotCTF2025/Web/TrustFall", flag: "PCTF{auth_****}", type: "web" },
+  { title: "Trust Vault", file: "CTF/PatriotCTF2025/Web/TrustVault", flag: "FLAG{py7h0n_****}", type: "web" },
+  { title: "Reverse Metadata Part 1", file: "CTF/PatriotCTF2025/Misc/ReverseMetaData1", flag: "MASONCC{images_****}", type: "misc" },
+  { title: "Reverse Metadata Part 2", file: "CTF/PatriotCTF2025/Misc/ReverseMetaData2", flag: "PCTF{hidden_****}", type: "misc" },
 ];
 
 const myCTFs = [
