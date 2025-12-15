@@ -190,7 +190,7 @@
 
     <h2>0. The challenge description</h2>
     <p>The description gives us a pretty big hint.</p>
-    <img src="https://github.com/user-attachments/assets/aa873df1-6055-4ed9-9129-aefebebdbef0" alt="Challenge description">
+    <img src="Pic/Trustvault/1.png" alt="Challenge description">
     <ul>
       <li><strong>Jinja2</strong> template</li>
       <li><strong>vulnerable SQL query</strong></li>
@@ -199,10 +199,9 @@
 
     <h2>1. The challenge page.</h2>
     <p>Register → login → dashboard with four tabs. Only <strong>Bookmarks</strong> is useful.</p>
-    <img src="https://github.com/user-attachments/assets/df9a14c6-ea35-4c40-ad51-4ce70c7b471e" alt="Dashboard tabs">
 
     <p>Adding <code>"{{7*7}}'</code> as a bookmark → reflected as plain text. Not rendered.</p>
-    <img src="https://github.com/user-attachments/assets/e0370a28-153c-4781-b92d-44393d1123fc" alt="Plain text reflection">
+    <img src="Pic/Trustvault/2.png" alt="Plain text reflection">
 
     <p>View source on Bookmarks tab → hidden comment:</p>
     <pre><code>&lt;!-- &lt;p&gt;Legacy console: &lt;a href="/search"&gt;/search&lt;/a&gt;&lt;/p&gt; --&gt;</code></pre>
@@ -229,7 +228,7 @@
     </a></p>
 
     <p>Visit <code>/search</code> → flag printed instantly.</p>
-    <img src="https://github.com/user-attachments/assets/8fe90d5f-22f6-448b-90fb-2164a47a2acf" alt="Flag revealed">
+    <img src="Pic/Trustvault/5.png" alt="Flag revealed">
 
     <div class="flag">
       PCTF{SQLi_****}
