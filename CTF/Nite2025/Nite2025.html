@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PatriotCTF 2025 • syndro</title>
+
+  <!-- THEME PERSISTENCE -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) {
+        document.documentElement.classList.add('light');
+      }
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #06b6d4;
+      --accent-light: #00ffff;
+      --accent-glow: rgba(6, 182, 212, 0.3);
+    }
+
+    .light {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-hover: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --accent: #0891b2;
+      --accent-light: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* PARTICLES BACKGROUND */
+    canvas#particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      opacity: 0.5;
+    }
+
+    /* BACK BUTTON */
+    .back-btn {
+      position: fixed;
+      top: 40px;
+      left: 40px;
+      z-index: 9999;
+      background: var(--surface);
+      color: var(--accent);
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 25px var(--accent-glow);
+      transition: all 0.4s ease;
+      backdrop-filter: blur(10px);
+    }
+    .back-btn:hover {
+      background: var(--accent);
+      color: #000;
+      transform: scale(1.08);
+      box-shadow: 0 0 40px var(--accent-glow);
+    }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      position: fixed;
+      top: 40px;
+      right: 40px;
+      z-index: 9999;
+      width: 60px;
+      height: 60px;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      color: var(--accent-light);
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 0 25px var(--accent-glow);
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: #000;
+      transform: scale(1.15);
+    }
+    .theme-toggle .moon { display: block; }
+    .theme-toggle .sun { display: none; }
+    .light .theme-toggle .moon { display: none; }
+    .light .theme-toggle .sun { display: block; }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      padding: 180px 20px 120px;
+    }
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 6rem;
+      color: var(--accent-light);
+      text-shadow: 0 0 40px var(--accent);
+      margin-bottom: 20px;
+    }
+    .header p {
+      font-size: 1.6rem;
+      opacity: 0.85;
+    }
+
+    /* GRID */
+    .grid {
+      max-width: 1300px;
+      margin: 0 auto 100px;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 40px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 36px;
+      border: 1px solid var(--accent-glow);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: all 0.6s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 50px var(--accent-glow);
+      border-color: var(--accent);
+    }
+
+    .category-tag {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      color: #000;
+      text-transform: uppercase;
+    }
+    .tag-web { background: #ff3399; }
+    .tag-misc { background: #39ff14; }
+
+    .card h3 {
+      font-size: 1.7rem;
+      margin: 20px 0 16px;
+      color: var(--accent-light);
+    }
+    .card .flag {
+      color: var(--text-muted);
+      margin: 20px 0;
+      font-size: 1.1rem;
+    }
+    .card .flag code {
+      background: rgba(6,182,212,0.1);
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: var(--accent-light);
+    }
+    .card small {
+      opacity: 0.7;
+      font-size: 0.95rem;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 60px;
+      opacity: 0.6;
+      font-size: 1rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .header { padding: 140px 20px 80px; }
+      .header h1 { font-size: 4.5rem; }
+      .back-btn, .theme-toggle {
+        top: 20px;
+      }
+      .back-btn { left: 20px; }
+      .theme-toggle { right: 20px; }
+      .grid { padding: 0 20px; gap: 30px; }
+    }
+    @media (max-width: 600px) {
+      .back-btn, .theme-toggle {
+        position: static;
+        margin: 20px auto;
+        display: block;
+        width: fit-content;
+      }
+      .theme-toggle { margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PARTICLES BACKGROUND -->
+  <canvas id="particles"></canvas>
+
+  <!-- BACK BUTTON -->
+  <a href="https://syndro-1.github.io/page/" class="back-btn">← Back to Portfolio</a>
+
+  <!-- THEME TOGGLE -->
+  <div class="theme-toggle" id="themeToggle">
+    <span class="sun">☀</span>
+    <span class="moon">☾</span>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>NiteCTF 2025</h1>
+    <p>Solved Challenges • Writeups by syndro</p>
+  </div>
+
+  <!-- CHALLENGES GRID -->
+  <div class="grid" id="grid"></div>
+
+  <footer>syndro © 2025</footer>
+
+  <script>
+    // Particles (calm floating cyan dots - matches main site)
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedY = Math.random() * 0.6 + 0.2;
+        this.hue = 180 + Math.random() * 30;
+      }
+      update() {
+        this.y += this.speedY;
+        if (this.y > canvas.height) this.y = 0;
+      }
+      draw() {
+        ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, 0.6)`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    for (let i = 0; i < 70; i++) particles.push(new Particle());
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Challenges
+    const challenges = [
+      { title: "Graph Grief", file: "GraphGrief.html", flag: "nite{Th3_Qu4ntum_****}", type: "web" },
+      { title: "Database Reincursion", file: "DatabaseReincursion.html", flag: "nite{neVer_90nn4_****}", type: "web" },
+    ];
+
+    const grid = document.getElementById("grid");
+    challenges.forEach(c => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="category-tag tag-${c.type}">${c.type.toUpperCase()}</div>
+        <h3>${c.title}</h3>
+        <p class="flag">Flag: <code>${c.flag}</code></p>
+        <small>Click to read writeup</small>
+      `;
+      card.onclick = () => location.href = c.file;
+      grid.appendChild(card);
+    });
+
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.documentElement.classList.toggle('light');
+      localStorage.theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+    });
+  </script>
+</body>
+</html>

