@@ -198,11 +198,11 @@
     
     <h2>0. The Challenge description</h2>
     <p>There is not much in challenge description</p>
-    <img src="https://github.com/user-attachments/assets/b74dcb4e-5f6e-482d-945a-d4ff6653e710" alt="SecureAuth banner">
+    <img src="Pic/SecureAuth/1.png" alt="SecureAuth banner">
 
     <h2>1. Initial Login Page</h2>
     <p>We’re greeted by a JSON-based login form. The <code>Content-Type: application/json</code>AKA, NoSQL Injection.</p>
-    <img src="https://github.com/user-attachments/assets/265d5d49-43fa-4a4e-b337-d4a1e848bb8e" alt="Login page">
+    <img src="Pic/SecureAuth/2.png" alt="Login page">
 
     <p>Tried the classic NoSQLi payload in the browser:</p>
     <pre><code>Username: admin
@@ -211,26 +211,26 @@ Password: {"$ne": null}</code></pre>
 
     <h2>2. Using Burp/ZAP</h2>
     <p>Direct access to <code>/api/authenticate</code> gave “Method Not Allowed”. Switched to POST and added the proper header:</p>
-    <img src="https://github.com/user-attachments/assets/f8da4eae-0d3c-425f-bd26-4a9700912330" alt="Method not allowed">
-    <img src="https://github.com/user-attachments/assets/aa4de28e-f4d8-48eb-8676-cf063993a634" alt="Fixed request with POST + Content-Type">
+    <img src="Pic/SecureAuth/3.png" alt="Method not allowed">
+    <img src="Pic/SecureAuth/4.png" alt="Fixed request with POST + Content-Type">
 
     <h2>3. Crafting the Real Payload</h2>
     <p>The challenge literally tells us the backend structure:</p>
-    <img src="https://github.com/user-attachments/assets/02f7afdb-0a73-4099-ae0d-25765f629f5b" alt="Hint in source">
+    <img src="Pic/SecureAuth/5.png" alt="Hint in source">
 
     <p>So we send the <code>$ne</code> operator outside the quotes:</p>
-    <img src="https://github.com/user-attachments/assets/bdd1ac05-e831-4e51-b4b5-33560d2b6883" alt="Final payload in Burp">
+    <img src="Pic/SecureAuth/6.png" alt="Final payload in Burp">
 
     <h2>4. Profits!</h2>
     <p>Bypassed authentication and got the flag instantly.</p>
-    <img src="https://github.com/user-attachments/assets/f56ff919-b7e2-4519-b177-e4a78b7d8d65" alt="Flag revealed">
+    <img src="Pic/SecureAuth/7.png" alt="Flag revealed">
 
     <h2>5. One-liner with cURL (No Burp/ZAP needed)</h2>
     <pre><code>curl -X POST http://18.212.136.134:5200/api/authenticate \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":{"$ne":null},"remember":"false"}'</code></pre>
 
-    <img src="https://github.com/user-attachments/assets/06868a28-4cf3-471d-81e5-0397d5ec3b8e" alt="cURL success">
+    <img src="Pic/SecureAuth/8.png" alt="cURL success">
 
     <div class="flag">
       FLAG(py7h0n_****}
