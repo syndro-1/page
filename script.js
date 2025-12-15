@@ -178,21 +178,6 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 });
 if (localStorage.theme === 'light') document.documentElement.classList.add('light');
 
-async function updateVisitorCount() {
-  const el = document.getElementById('visitorCount');
-  try {
-    const res = await fetch('https://api.counterapi.dev/v2/syndro-counter/syndro-visitors/up', { method: 'POST' });
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    el.textContent = data.value.toLocaleString();
-  } catch (err) {
-    let count = parseInt(localStorage.getItem('local-visits') || '0');
-    count += 1;
-    localStorage.setItem('local-visits', count);
-    el.textContent = count.toLocaleString();
-  }
-}
-
 document.getElementById('searchBar').addEventListener('input', e => {
   const term = e.target.value.toLowerCase();
   document.querySelectorAll('.card').forEach(card => {
@@ -260,5 +245,4 @@ window.addEventListener('load', () => {
   updateCategoryStats();
   populateRecentSolves();
   populateMyCTFs();
-  updateVisitorCount();
 });
