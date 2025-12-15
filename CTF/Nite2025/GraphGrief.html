@@ -413,6 +413,119 @@ type Query {
 }</pre>
 
     <img src="Pic/15.png" alt="Audit logs revealing secret node reference">
+    <p>The leaked auditLogs:</p>
+    <pre>
+      {
+  "data" : {
+    "auditLogs" : [ {
+      "id" : "QXVkaXRMb2c6bG9nLTE=",
+      "action" : "LOGIN",
+      "actorId" : "user-1",
+      "targetNodeId" : "user-1",
+      "timestamp" : "2024-01-15T10:00:00Z",
+      "details" : "User login from 192.168.1.100"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTI=",
+      "action" : "VIEW_PRODUCT",
+      "actorId" : "user-2",
+      "targetNodeId" : "user-5",
+      "timestamp" : "2024-01-15T10:15:00Z",
+      "details" : "Viewed product details"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTM=",
+      "action" : "CREATE_ORDER",
+      "actorId" : "user-3",
+      "targetNodeId" : "order-1",
+      "timestamp" : "2024-01-15T10:30:00Z",
+      "details" : "New order created"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTQ=",
+      "action" : "UPDATE_PROFILE",
+      "actorId" : "user-5",
+      "targetNodeId" : "profile-user-5",
+      "timestamp" : "2024-01-15T11:00:00Z",
+      "details" : "Profile bio updated"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTU=",
+      "action" : "LOGIN",
+      "actorId" : "user-7",
+      "targetNodeId" : "user-7",
+      "timestamp" : "2024-01-15T11:20:00Z",
+      "details" : "User login from 192.168.1.101"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTY=",
+      "action" : "VIEW_PRODUCT",
+      "actorId" : "user-10",
+      "targetNodeId" : "user-12",
+      "timestamp" : "2024-01-15T11:45:00Z",
+      "details" : "Viewed product details"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTc=",
+      "action" : "ACCESS_DENIED",
+      "actorId" : "user-8",
+      "targetNodeId" : "user-20",
+      "timestamp" : "2024-01-15T12:00:00Z",
+      "details" : "Insufficient permissions"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTg=",
+      "action" : "DATA_EXPORT",
+      "actorId" : "user-1",
+      "targetNodeId" : "user-5",
+      "timestamp" : "2024-01-15T12:30:00Z",
+      "details" : "User data exported"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTk=",
+      "action" : "SUSPICIOUS_ACCESS",
+      "actorId" : "user-9",
+      "targetNodeId" : "admin-config-1",
+      "timestamp" : "2024-01-15T13:00:00Z",
+      "details" : "Attempted access to restricted resource"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTEw",
+      "action" : "VIEW_PRODUCT",
+      "actorId" : "user-15",
+      "targetNodeId" : "user-30",
+      "timestamp" : "2024-01-15T13:30:00Z",
+      "details" : "Viewed product details"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTEx",
+      "action" : "LOGIN",
+      "actorId" : "user-18",
+      "targetNodeId" : "user-18",
+      "timestamp" : "2024-01-15T14:00:00Z",
+      "details" : "User login from 192.168.1.102"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTEy",
+      "action" : "API_QUERY",
+      "actorId" : "user-12",
+      "targetNodeId" : "admin-config-1",
+      "timestamp" : "2024-01-15T14:30:00Z",
+      "details" : "GraphQL query executed on restricted node"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTEz",
+      "action" : "VIEW_PRODUCT",
+      "actorId" : "user-20",
+      "targetNodeId" : "user-55",
+      "timestamp" : "2024-01-15T15:00:00Z",
+      "details" : "Viewed product details"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTE0",
+      "action" : "LOGOUT",
+      "actorId" : "user-5",
+      "targetNodeId" : "user-5",
+      "timestamp" : "2024-01-15T15:30:00Z",
+      "details" : "User logged out"
+    }, {
+      "id" : "QXVkaXRMb2c6bG9nLTE1",
+      "action" : "SYSTEM_ALERT",
+      "actorId" : "system",
+      "targetNodeId" : "secret:flag",
+      "timestamp" : "2024-01-15T16:00:00Z",
+      "details" : "Attempted unauthorized access to system resource"
+    } ]
+  }
+}
+    </pre>
 
     <p>The logs reference <code>secret:flag</code>, and all IDs (e.g., <code>QXVkaXRMb2c6bG9nLTE1</code>) are Base64-encoded.</p>
 
