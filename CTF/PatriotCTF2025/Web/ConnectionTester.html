@@ -211,7 +211,7 @@
 
     <h2>1. Login Page – SQL Injection</h2>
     <p>The challenge starts with a simple login form.</p>
-      <img src="https://github.com/user-attachments/assets/d4bf979b-40ee-4515-9eea-c101dd5f33c7" alt="Login form">
+      <img src="Pic/ConnectionTester/2" alt="Login form">
     <p>I tried to do a basic SQL Injection to see how the server behaves.</p>
 
     <p><strong>Payload:</strong></p>
@@ -223,13 +223,13 @@ Password:<code>anything</code></pre>
     <pre><code>1=1</code> IS ALWAYS TRUE, so the payload returns true and logs us in into the first user in the database, Which is most of the time the admin. And <code>--</code>Are to comment everything afterwards, So the password does not matter</pre>
     <p>And like that we are in.</p>
 
-    <img src="https://github.com/user-attachments/assets/bdb0e30c-d989-445f-b574-d535f029f4c1" alt="Logged in as admin">
+    <img src="Pic/ConnectionTester/3" alt="Logged in as admin">
 
     <h2>2. Dashboard – The Ping Tool</h2>
     <p>Once logged in, we get a "Test Connection" feature that pings any host we enter.</p>
     <p>Trying <code>127.0.0.1</code> returns output → <strong>Maybe its just shell execution on the backend?</strong>.</p>
 
-    <img src="https://github.com/user-attachments/assets/f8c3aac0-726b-472d-b726-2e10c266c1ee" alt="Ping localhost">
+    <img src="Pic/ConnectionTester/4" alt="Ping localhost">
 
     <h2>3. Discovering the Injection Point</h2>
     <p>The backend likely runs:</p>
@@ -248,14 +248,14 @@ Password:<code>anything</code></pre>
     <p>Payload:</p>
     <pre>127.0.0.1 & echo "$(ls)"</pre>
 
-    <img src="https://github.com/user-attachments/assets/06f5e09b-2914-4605-bb88-452aaf44a51d" alt="Listing files">
+    <img src="Pic/ConnectionTester/5" alt="Listing files">
     <p>→ Reveals <code>flag.txt</code></p>
 
     <h2>5. Reading the Flag</h2>
     <p>Final payload:</p>
     <pre>127.0.0.1 & echo "$(cat flag.txt)"</pre>
 
-    <img src="https://github.com/user-attachments/assets/e38815c5-3418-458b-9dd6-315b935b486a" alt="Flag revealed">
+    <img src="Pic/ConnectionTester/6" alt="Flag revealed">
 
     <div class="flag">
       PCTF{C0nnection_****}
